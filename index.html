@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Thi Trắc Nghiệm - Hàm Số</title>
+    <meta name="description" content="Đề thi trắc nghiệm toán học về hàm số: miền xác định, miền giá trị, hàm chẵn lẻ, đồ thị hàm số">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+            startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+        };
+    </script>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header" id="quiz-header">
+            <div class="header-badge">📐 Toán Học Trắc Nghiệm</div>
+            <h1>Đề Thi: Hàm Số</h1>
+            <p class="header-sub">Miền xác định • Miền giá trị • Hàm chẵn/lẻ • Đồ thị hàm số</p>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-icon">📝</span>
+                    <span id="total-questions">15 câu hỏi</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">✅</span>
+                    <span id="score-display">Đúng: 0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">❌</span>
+                    <span id="wrong-display">Sai: 0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">⏳</span>
+                    <span id="remaining-display">Còn lại: 15</span>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </header>
+
+        <!-- Questions Container -->
+        <div id="questions-container"></div>
+
+        <!-- Result Panel -->
+        <div class="result-panel" id="result-panel" style="display:none;">
+            <div class="result-icon" id="result-icon">🏆</div>
+            <h2 id="result-title">Kết quả</h2>
+            <p id="result-text"></p>
+            <div class="result-details">
+                <div class="result-stat correct-stat">
+                    <span class="big-number" id="final-correct">0</span>
+                    <span>Đúng</span>
+                </div>
+                <div class="result-stat wrong-stat">
+                    <span class="big-number" id="final-wrong">0</span>
+                    <span>Sai</span>
+                </div>
+                <div class="result-stat score-stat">
+                    <span class="big-number" id="final-percent">0%</span>
+                    <span>Điểm</span>
+                </div>
+            </div>
+            <button class="btn-restart" onclick="location.reload()">🔄 Làm lại đề thi</button>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
