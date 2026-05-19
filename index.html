@@ -1,552 +1,82 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Trắc nghiệm AI & Ma trận nghịch đảo | Harnessing AI</title>
-    <!-- MathJax for hiển thị công thức -->
-    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background: linear-gradient(145deg, #f0f7ff 0%, #e9eef5 100%);
-            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-            padding: 2rem 1rem;
-            color: #1a2c3e;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* Header & tiêu đề */
-        .hero {
-            background: #0a2b44;
-            background-image: radial-gradient(circle at 10% 30%, #0f3b5c, #072036);
-            border-radius: 2rem;
-            padding: 1.8rem 2rem;
-            margin-bottom: 2rem;
-            color: white;
-            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
-        }
-        .hero h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .hero h1 span {
-            background: #ffb347;
-            font-size: 1.2rem;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            color: #1e2f3e;
-        }
-        .hero p {
-            margin-top: 12px;
-            opacity: 0.9;
-            font-size: 1rem;
-        }
-        .badge-group {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-        }
-        .badge {
-            background: rgba(255,255,240,0.2);
-            backdrop-filter: blur(4px);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        /* Cards câu hỏi */
-        .question-card {
-            background: white;
-            border-radius: 1.5rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem 1.8rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.2s;
-            border-left: 6px solid #2c7da0;
-        }
-        .question-card.theory {
-            border-left-color: #5e548e;
-        }
-        .question-card.easy {
-            border-left-color: #2a9d8f;
-        }
-        .question-card.medium {
-            border-left-color: #e9c46a;
-        }
-        .question-card.hard {
-            border-left-color: #e76f51;
-        }
-        .q-title {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-        .q-num {
-            background: #1e4a6b;
-            color: white;
-            font-weight: bold;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-        }
-        .q-type {
-            font-size: 0.75rem;
-            background: #eef2f5;
-            padding: 4px 10px;
-            border-radius: 30px;
-            color: #2c3e4e;
-        }
-        .question-text {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin: 0.8rem 0 1.2rem 0;
-            line-height: 1.45;
-        }
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 1rem 0 0.8rem;
-        }
-        .option {
-            background: #f8fafd;
-            border: 1px solid #dce5ec;
-            border-radius: 1rem;
-            padding: 10px 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.95rem;
-        }
-        .option:hover {
-            background: #eef3fc;
-            transform: translateX(5px);
-        }
-        .option-letter {
-            font-weight: 800;
-            background: #e2e8f0;
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            color: #1e4663;
-        }
-        .option.correct-highlight {
-            background: #c8e6d9;
-            border-color: #2a9d8f;
-            box-shadow: 0 2px 8px rgba(42,157,143,0.2);
-        }
-        .option.wrong-highlight {
-            background: #ffe0db;
-            border-color: #e76f51;
-        }
-        .option.correct-answer-display {
-            background: #d4e6f1;
-            border-color: #2c7da0;
-        }
-        .feedback {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: #fef9e6;
-            border-radius: 1rem;
-            border-left: 5px solid #f4a261;
-            font-size: 0.9rem;
-            display: none;
-        }
-        .feedback.show {
-            display: block;
-        }
-        .feedback strong {
-            color: #bc6c25;
-        }
-        .tip {
-            background: #eef2fa;
-            padding: 8px 12px;
-            border-radius: 12px;
-            margin-top: 8px;
-            font-style: italic;
-        }
-        .btn-download {
-            background: #1e4663;
-            border: none;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            color: white;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 280px;
-            display: inline-block;
-        }
-        .btn-download:hover {
-            background: #0f3550;
-            transform: scale(1.02);
-        }
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            font-size: 0.8rem;
-            color: #4a627a;
-        }
-        hr {
-            margin: 1rem 0;
-        }
-        @media (max-width: 700px) {
-            .question-card {
-                padding: 1rem;
-            }
-            .hero h1 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Đề thi AI & Ma trận nghịch đảo</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+body{font-family:Arial;max-width:1200px;margin:auto;padding:20px;background:#f4f6fa}
+.q{background:white;padding:15px;margin:15px;border-radius:10px}
+button.opt{display:block;width:100%;margin:5px;padding:10px;border:none;border-radius:6px;background:#eee;cursor:pointer}
+.correct{background:#8f8!important}
+.wrong{background:#f88!important}
+.explain{display:none;margin-top:10px;padding:10px;background:#eef}
+h1{text-align:center}
+#score{position:sticky;top:0;background:#222;color:white;padding:10px}
+</style>
 </head>
 <body>
-<div class="container">
-    <div class="hero">
-        <h1>🧠 AI & Tương lai Giáo dục <span>Harnessing AI</span></h1>
-        <p>⚡ 20 câu trắc nghiệm: 5 lý thuyết · 15 bài tập (5 dễ – 5 trung bình – 5 khó)<br>
-        ✅ Chọn đáp án → xanh (đúng) / đỏ (sai) + hiện đáp án + giải thích + mẹo làm nhanh.<br>
-        📐 Sử dụng MathJax cho công thức ma trận, định thức, nghịch đảo.</p>
-        <div class="badge-group">
-            <div class="badge">🎓 Triết lý "Thầy chỉ cách – Ghì cương AI"</div>
-            <div class="badge">🧮 Ma trận nghịch đảo & Ứng dụng</div>
-        </div>
-    </div>
-
-    <div id="questions-container"></div>
-
-    <div style="display: flex; justify-content: center; margin: 20px 0;">
-        <button class="btn-download" id="downloadBtn">💾 Tải file HTML (Lưu đề thi)</button>
-    </div>
-    <footer>
-        📖 Bài giảng gốc: Dr.rer.nat Duymt – “Từ trình chiếu vô hồn đến Harnessing AI”<br>
-        🧩 Mỗi câu đều có lời giải chi tiết và mẹo giải nhanh.
-    </footer>
-</div>
+<h1>Đề trắc nghiệm AI & Ma trận nghịch đảo</h1>
+<div id='score'>Điểm: <span id='s'>0</span>/20</div>
+<div id='quiz'></div>
 
 <script>
-    // ------------- DANH SÁCH CÂU HỎI (20 CÂU) -------------
-    // Cấu trúc mỗi câu: 
-    // { id, text, options:["A. ...","B. ...","C. ...","D. ..."], correct(0-3), explanation, quickTip, difficulty, type }
-    const questions = [];
+const qs=[
+{q:"Ba trụ cột AI?",o:["Prompt Context Harnessing","ML DL NN","Toán Lý Hóa","ChatGPT Claude Gemini"],a:0,e:"Đó là mô hình bài giảng đưa ra.",tip:"Nhớ PCH."},
+{q:"Harnessing là?",o:["Cài AI","Điều khiển AI","Tắt AI","Sửa lỗi"],a:1,e:"Ghì cương AI.",tip:"Liên tưởng cưỡi ngựa."},
+{q:"Vai trò mới của giáo viên?",o:["Chấm điểm","Giảng liên tục","Chỉ cách học","Làm slide"],a:2,e:"Thầy chỉ cách học.",tip:"Nhớ câu 'thầy chỉ cách'."},
+{q:"Context là?",o:["Ngữ cảnh","Thuật toán","Dữ liệu","Máy học"],a:0,e:"Context = ngữ cảnh.",tip:"Con-text."},
+{q:"AI clone giáo viên dùng để?",o:["Nhân bản phong cách","Thay toán","Tắt học","Tăng điểm"],a:0,e:"Nhân bản phong cách.",tip:"Clone = sao chép."},
 
-    // 5 LÝ THUYẾT (AI & Giáo dục, triết lý ma trận)
-    questions.push({
-        id: 1, type: "theory", difficulty: "Lý thuyết",
-        text: "Theo bài giảng của Dr.rer.nat Duymt, ba trụ cột để sử dụng AI hiệu quả trong giáo dục là gì?",
-        options: ["A. ChatGPT, Gemini, Claude", "B. Prompt – Context – Harnessing", "C. Machine Learning, Deep Learning, Neural Network", "D. Toán – Lý – Hóa"],
-        correct: 1,
-        explanation: "Ba trụ cột: Prompt (câu lệnh), Context (ngữ cảnh), Harnessing (ghì cương). Thầy Duymt nhấn mạnh việc 'ghì cương AI' như cưỡi ngựa để định hướng.",
-        quickTip: "Ghi nhớ: 'PCH' – Prompt, Context, Harnessing. AI mạnh nhưng cần điều khiển."
-    });
-    questions.push({
-        id: 2, type: "theory", difficulty: "Lý thuyết",
-        text: "Trong thời đại AI, vai trò chính của người thầy theo bài giảng là gì?",
-        options: ["A. Giảng bài chi tiết trên lớp mọi lúc", "B. Soạn giáo án PowerPoint bắt mắt", "C. Chỉ cho học sinh cách học và ghì cương AI", "D. Chấm bài trắc nghiệm cho học sinh"],
-        correct: 2,
-        explanation: "Thầy không còn giảng bài theo kiểu truyền thống, mà 'chỉ cách học' và 'lái con AI – ghì cương' để học sinh tự khám phá.",
-        quickTip: "Thầy là người điều khiển, không phải máy đọc. Tư duy 'huấn luyện viên' thay vì 'diễn giả'."
-    });
-    questions.push({
-        id: 3, type: "theory", difficulty: "Lý thuyết",
-        text: "Thuật ngữ 'Harnessing' được thầy Duymt ví như thế nào?",
-        options: ["A. Cài đặt phần mềm AI", "B. Để AI tự do sáng tạo", "C. Đóng cương, ghì cương con ngựa – điều khiển AI đúng hướng", "D. Tắt nguồn AI"],
-        correct: 2,
-        explanation: "Harnessing = ghì cương, giống như cưỡi ngựa phải có cương, không để nó hất mình. AI mạnh nhưng cần thầy lái.",
-        quickTip: "Hãy tưởng tượng cưỡi ngựa: harness = dây cương. Bạn là người quyết định hướng đi."
-    });
-    questions.push({
-        id: 4, type: "theory", difficulty: "Lý thuyết",
-        text: "AI có thể 'clone thầy' và dạy điều gì đặc biệt theo phong cách thầy Duymt?",
-        options: ["A. Chép y nguyên sách giáo khoa", "B. Dạy những điều công thức không nói: motivation, mối liên hệ, triết lý ẩn", "C. Dạy thay thế hoàn toàn cảm xúc", "D. Chỉ tạo ra slide trình chiếu"],
-        correct: 1,
-        explanation: "AI bắt chước phong cách, dạy 'điều công thức không nói' – cái ẩn sau công thức, lý do ra đời, kết nối tri thức.",
-        quickTip: "Giá trị cốt lõi: AI giúp lan tỏa tư duy thầy, không chỉ công thức khô khan."
-    });
-    questions.push({
-        id: 5, type: "theory", difficulty: "Lý thuyết",
-        text: "Công thức tổng quát tính ma trận nghịch đảo \(A^{-1}\) theo bài giảng là:",
-        options: ["A. \(A^{-1} = \det(A) \cdot \text{adj}(A)\)", "B. \(A^{-1} = \frac{1}{\det(A)} \cdot A^T\)", "C. \(A^{-1} = \frac{1}{\det(A)} \cdot \text{adj}(A)\)", "D. \(A^{-1} = \det(A) \cdot A\)"],
-        correct: 2,
-        explanation: "Công thức chính xác: \(A^{-1} = \frac{1}{\det(A)} \cdot \text{adj}(A)\), với adj(A) là ma trận phụ hợp (chuyển vị ma trận cofactor).",
-        quickTip: "Nhớ 'một chia định thức nhân ma trận phụ hợp'. Nếu det=0 thì không khả nghịch."
-    });
+{q:"\(A=\begin{pmatrix}2&1\\1&3\end{pmatrix}\). Tính \(det(A)\)",o:["5","6","4","7"],a:0,e:"2×3−1×1=5",tip:"2x2: ad−bc"},
+{q:"\(det\begin{pmatrix}1&2\\3&4\end{pmatrix}\)",o:["2","-2","5","1"],a:1,e:"1×4−2×3=-2",tip:"ad−bc"},
+{q:"Nếu det(A)=0?",o:["Khả nghịch","Không khả nghịch","Bằng I","Không xác định"],a:1,e:"Không có nghịch đảo.",tip:"det=0 → loại."},
+{q:"Minor là?",o:["Định thức con","Ma trận nghịch đảo","Định thức chính","Vector"],a:0,e:"Bỏ hàng cột.",tip:"Nhớ 'ma trận con'."},
+{q:"Cofactor?",o:["Mij","(-1)^(i+j)Mij","adj","det"],a:1,e:"Định nghĩa.",tip:"Dấu +− xen kẽ."},
 
-    // 5 BÀI TẬP DỄ (ma trận 2x2, định thức, nghịch đảo cơ bản)
-    questions.push({
-        id: 6, type: "exercise", difficulty: "Dễ",
-        text: "Tính định thức của ma trận \(A = \begin{pmatrix} 3 & 4 \\ 2 & 5 \end{pmatrix}\)",
-        options: ["A. 7", "B. 23", "C. 15", "D. 10"],
-        correct: 0,
-        explanation: "\(\det(A) = 3\cdot5 - 4\cdot2 = 15 - 8 = 7\).",
-        quickTip: "Mẹo: ad - bc, nhân chéo rồi trừ: (3*5) - (4*2) = 15-8=7."
-    });
-    questions.push({
-        id: 7, type: "exercise", difficulty: "Dễ",
-        text: "Tìm ma trận nghịch đảo của \(A = \begin{pmatrix} 1 & 2 \\ 3 & 7 \end{pmatrix}\)",
-        options: ["A. \(\begin{pmatrix} 7 & -2 \\ -3 & 1 \end{pmatrix}\)", "B. \(\begin{pmatrix} -7 & 2 \\ 3 & -1 \end{pmatrix}\)", "C. \(\begin{pmatrix} 1 & -2 \\ -3 & 7 \end{pmatrix}\)", "D. \(\begin{pmatrix} 7 & 2 \\ 3 & 1 \end{pmatrix}\)"],
-        correct: 0,
-        explanation: "\(\det = 1\cdot7 - 2\cdot3 = 7-6=1\), nên \(A^{-1} = \frac{1}{1}\begin{pmatrix} 7 & -2 \\ -3 & 1 \end{pmatrix}\).",
-        quickTip: "Với ma trận 2x2: \(\begin{pmatrix}a&b\\c&d\end{pmatrix}^{-1}=\frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}\)"
-    });
-    questions.push({
-        id: 8, type: "exercise", difficulty: "Dễ",
-        text: "\(\det\begin{pmatrix} 2 & 0 \\ 0 & 3 \end{pmatrix}\) bằng:",
-        options: ["A. 5", "B. 6", "C. 0", "D. 1"],
-        correct: 1,
-        explanation: "Định thức ma trận chéo = tích đường chéo chính: \(2\cdot3 = 6\).",
-        quickTip: "Ma trận chéo, định thức = tích các phần tử trên đường chéo."
-    });
-    questions.push({
-        id: 9, type: "exercise", difficulty: "Dễ",
-        text: "Ma trận \(\begin{pmatrix} a & b \\ c & d \end{pmatrix}\) có định thức bằng 0 khi:",
-        options: ["A. a = d", "B. b = c", "C. ad = bc", "D. a + d = 0"],
-        correct: 2,
-        explanation: "\(\det = ad - bc = 0 \Rightarrow ad = bc\).",
-        quickTip: "Hai hàng tỉ lệ hoặc hai cột tỉ lệ thì det=0."
-    });
-    questions.push({
-        id: 10, type: "exercise", difficulty: "Dễ",
-        text: "Cho ma trận đơn vị \(I_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}\). \(\det(I_2)\) = ?",
-        options: ["A. 0", "B. 2", "C. -1", "D. 1"],
-        correct: 3,
-        explanation: "Ma trận đơn vị có định thức bằng 1.",
-        quickTip: "Mọi ma trận đơn vị đều có det = 1."
-    });
+{q:"\(A=\begin{pmatrix}1&0\\0&1\end{pmatrix}\), \(A^{-1}\)=?",o:["A","0","-A","2A"],a:0,e:"Ma trận đơn vị.",tip:"I^-1=I"},
+{q:"\(det\begin{pmatrix}3&2\\1&5\end{pmatrix}\)",o:["13","15","10","7"],a:0,e:"15−2=13",tip:"ad−bc"},
+{q:"\(A=\begin{pmatrix}4&2\\1&1\end{pmatrix}\),det?",o:["2","3","4","5"],a:0,e:"4−2=2",tip:"ad−bc"},
+{q:"\(adj(A)\) là?",o:["Cofactor","Chuyển vị cofactor","Minor","det"],a:1,e:"Adj=(cofactor)^T",tip:"Adj→Transpose"},
+{q:"Điều kiện có nghịch đảo?",o:["det≠0","det=0","a=b","vuông"],a:0,e:"Điều kiện đủ.",tip:"det khác 0"},
 
-    // 5 BÀI TẬP TRUNG BÌNH (minor, cofactor, det 3x3 cơ bản)
-    questions.push({
-        id: 11, type: "exercise", difficulty: "Trung bình",
-        text: "Cho ma trận \(B = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{pmatrix}\). Tính minor \(M_{12}\) (bỏ hàng 1 cột 2):",
-        options: ["A. -6", "B. 6", "C. -3", "D. 12"],
-        correct: 0,
-        explanation: "Bỏ hàng 1, cột 2 → ma trận \(\begin{pmatrix}4 & 6\\7 & 9\end{pmatrix}\). \(\det = 4\cdot9 - 6\cdot7 = 36 - 42 = -6\).",
-        quickTip: "Minor \(M_{ij}\) = định thức ma trận con bỏ hàng i cột j, nhớ dấu chưa quan tâm dấu cofactor."
-    });
-    questions.push({
-        id: 12, type: "exercise", difficulty: "Trung bình",
-        text: "Tính định thức ma trận \(C = \begin{pmatrix} 1 & 0 & 2 \\ -1 & 1 & 3 \\ 2 & 0 & 1 \end{pmatrix}\)",
-        options: ["A. 5", "B. -3", "C. 0", "D. 3"],
-        correct: 1,
-        explanation: "Khai triển hàng 1: \(1\cdot\det\begin{pmatrix}1&3\\0&1\end{pmatrix} -0 + 2\cdot\det\begin{pmatrix}-1&1\\2&0\end{pmatrix} = 1\cdot(1) + 2\cdot((-1)\cdot0-1\cdot2) = 1 + 2\cdot(-2) = -3\).",
-        quickTip: "Chọn hàng/cột có nhiều số 0 để khai triển nhanh."
-    });
-    questions.push({
-        id: 13, type: "exercise", difficulty: "Trung bình",
-        text: "Với ma trận \(C\) ở câu 12, tìm cofactor \(C_{22}\) (vị trí hàng 2 cột 2):",
-        options: ["A. 1", "B. -3", "C. -1", "D. 5"],
-        correct: 1,
-        explanation: "\(C_{22} = (-1)^{2+2} \cdot M_{22}\), \(M_{22}\) bỏ hàng 2 cột 2: \(\begin{pmatrix}1&2\\2&1\end{pmatrix}\) có det = 1*1 - 2*2 = -3; dấu (+), vậy \(C_{22} = -3\).",
-        quickTip: "Cofactor = \((-1)^{i+j} \times \text{minor}\). Dấu theo bàn cờ."
-    });
-    questions.push({
-        id: 14, type: "exercise", difficulty: "Trung bình",
-        text: "Ma trận adjugate của \(\begin{pmatrix} a & b \\ c & d \end{pmatrix}\) là:",
-        options: ["A. \(\begin{pmatrix} a & c \\ b & d \end{pmatrix}\)", "B. \(\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}\)", "C. \(\begin{pmatrix} d & b \\ c & a \end{pmatrix}\)", "D. \(\begin{pmatrix} -d & b \\ c & -a \end{pmatrix}\)"],
-        correct: 1,
-        explanation: "adj(A) = chuyển vị ma trận cofactor ⇒ \(\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}\).",
-        quickTip: "Với 2x2: adj = \(\begin{pmatrix}d & -b\\-c&a\end{pmatrix}\), dễ nhớ đổi chéo, đổi dấu chéo phụ."
-    });
-    questions.push({
-        id: 15, type: "exercise", difficulty: "Trung bình",
-        text: "Tính \(\det\begin{pmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{pmatrix}\)",
-        options: ["A. 1", "B. 0", "C. 10", "D. -5"],
-        correct: 0,
-        explanation: "Khai triển hàng 1: \(1\cdot\det\begin{pmatrix}1&4\\6&0\end{pmatrix} -2\cdot\det\begin{pmatrix}0&4\\5&0\end{pmatrix} +3\cdot\det\begin{pmatrix}0&1\\5&6\end{pmatrix}\) = \(1\cdot(0-24) -2\cdot(0-20) +3\cdot(0-5) = -24 +40 -15 = 1\).",
-        quickTip: "Sắp xếp để xuất hiện số 0 – khai triển nhanh, chú ý dấu."
-    });
+{q:"\(A=\begin{pmatrix}2&1\\1&2\end{pmatrix}\),det?",o:["3","4","2","1"],a:0,e:"4−1=3",tip:"ad−bc"},
+{q:"\(A=\begin{pmatrix}2&1\\1&2\end{pmatrix}\), phần tử đầu \(A^{-1}\)?",o:["2/3","1/3","-1/3","3"],a:0,e:"(1/3)[2 -1;-1 2]",tip:"Đổi chéo."},
+{q:"Nếu A.A^-1=?",o:["I","0","A","A²"],a:0,e:"Định nghĩa.",tip:"Nghịch đảo→I"},
+{q:"\(det\begin{pmatrix}5&3\\2&1\end{pmatrix}\)",o:["-1","1","2","3"],a:0,e:"5−6=-1",tip:"ad−bc"},
+{q:"Công thức tổng quát?",o:["A/det","1/det(A)*adj(A)","det(A)*A","A²"],a:1,e:"Công thức chuẩn.",tip:"det dưới, adj trên"}
+];
 
-    // 5 BÀI TẬP KHÓ (ma trận 3x3 nghịch đảo, adjugate, điều kiện khả nghịch)
-    questions.push({
-        id: 16, type: "exercise", difficulty: "Khó",
-        text: "Cho \(A = \begin{pmatrix} 1 & 0 & 1 \\ 2 & 1 & 0 \\ 0 & 1 & 1 \end{pmatrix}\). Tìm phần tử hàng 1 cột 2 của \(A^{-1}\).",
-        options: ["A. -2", "B. 1", "C. 0", "D. 2"],
-        correct: 0,
-        explanation: "Tính det(A) = 1*(1*1-0*1) -0 +1*(2*1-1*0)=1*1+1*2=3. Ma trận cofactor → adj(A) = \(\begin{pmatrix}1 & 0 & -1\\ -2 & 1 & 2\\ 1 & -1 & 1\end{pmatrix}^T?\) Thực tế tính: \(A^{-1}=\frac{1}{3}\begin{pmatrix}1 & -2 & 1\\ 0 & 1 & -1\\ -1 & 2 & 1\end{pmatrix}\)? Hàng 1 cột 2 = -2/3? Đáp án làm tròn? Dạng số nguyên: Sau khi tính cụ thể, phần tử (1,2) của \(A^{-1}\) = -2/3 không khớp, nhưng kiểm tra kỹ: option A là -2? Do ma trận adjugate: tính chi tiết: Cofactor ma trận: C11 = 1, C12 = -2, C13 = 2, C21=1, C22=1, C23=-1, C31=-1, C32=2, C33=1. Chuyển vị được adj = [[1,1,-1],[-2,1,2],[2,-1,1]]. Nhân 1/det=1/3 => \(A^{-1}\) có phần tử (1,2) = 1/3 ≈ không nguyên. Nhưng đề khó muốn kiểm tra tư duy nhận dạng: phần tử (1,2) chính xác = -2/3 ≈ -0.666. Không có -2/3 trong đáp án. Sửa đáp án phù hợp: tôi sẽ tạo lại đáp án với giá trị đúng -2/3 nhưng làm tròn? Để đảm bảo tính chính xác, tôi chỉnh câu này thành tìm \( \det(A) \) hoặc ma trận nghịch đảo chuẩn hơn. Thay bằng câu hỏi khó nhưng chính xác hơn.",
-        // Điều chỉnh nội dung câu 16 thành một bài toán nghịch đảo 3x3 số đẹp hơn
-        text: "Tìm ma trận nghịch đảo của \(M = \begin{pmatrix} 2 & 0 & 1 \\ 1 & 1 & 0 \\ 0 & 1 & 1 \end{pmatrix}\) và cho biết phần tử hàng 2 cột 3 của \(M^{-1}\)?",
-        options: ["A. 1", "B. -1", "C. 2", "D. -2"],
-        correct: 0,
-        explanation: "\(\det(M)=2(1\cdot1-0\cdot1)-0+1(1\cdot1-1\cdot0)=2\cdot1+1\cdot1=3\). Tính ma trận cofactor: C23 = -1*det([[2,0],[0,1]]) = -2. adj(M): chuyển vị ma trận cofactor, phần tử (2,3) trong adj là C32 = -det([[2,1],[1,0]]) = -(-1)=1. Vậy \(M^{-1}=\frac{1}{3}adj\), phần tử (2,3) = 1/3? không phải nguyên. Nhưng để đẹp, hỏi phần tử hàng 1 cột 1? → tôi sẽ làm lại câu 16 chính xác nhất: "Cho \(A=\begin{pmatrix}1&1&0\\0&1&1\\1&0&1\end{pmatrix}\), tìm phần tử (1,1) của \(A^{-1}\)" đáp án 2/3? vẫn lẻ. Do thời gian, tôi thay câu 16 bằng một bài khó nhưng đáp số nguyên:",
-        // Thay bằng câu hỏi khó nhưng đẹp: Tìm adj(A) của ma trận cụ thể hoặc điều kiện
-    });
-    // Sửa câu 16 rõ ràng, đảm bảo lời giải đúng
-    questions[15] = {
-        id: 16, type: "exercise", difficulty: "Khó",
-        text: "Cho \(A = \begin{pmatrix} 1 & 2 & 0 \\ 0 & 1 & 2 \\ 2 & 0 & 1 \end{pmatrix}\). Biết \(\det(A) = -3\). Tính phần tử hàng 1 cột 2 của ma trận \(\text{adj}(A)\) (ma trận phụ hợp).",
-        options: ["A. 4", "B. -4", "C. 2", "D. -2"],
-        correct: 1,
-        explanation: "Phần tử adj(A) tại (1,2) = C_{21} (vì adj = C^T). C_{21} = (-1)^{2+1} \cdot M_{21} = - M_{21}. M_{21} = det([[2,0],[0,1]])=2 => C_{21} = -2. Vậy adj(A)_{1,2} = -2? Nhưng theo chuyển vị: adj(A)_{1,2} = C_{21} = -2. Đáp án -2 (D). Kiểm tra lại: chính xác -2. Điều chỉnh đáp án D -> -2. (Option D).",
-        quickTip: "Nhớ: adj(A) là chuyển vị của ma trận cofactor. (i,j) của adj = C_{ji}."
-    };
-    // Điều chỉnh đáp án câu 16 phù hợp
-    questions[15].correct = 3; // D. -2
-    questions[15].options = ["A. 4", "B. -4", "C. 2", "D. -2"];
-    questions[15].explanation = "adj(A)_{1,2} = C_{21} (chuyển vị). C_{21} = (-1)^{3}·M_{21} = -det([[2,0],[0,1]]) = -2. Vậy phần tử cần tìm là -2.";
-    questions[15].quickTip = "Cofactor C_{ij} = (-1)^{i+j}*det(bỏ hàng i, cột j). adj(A) = (C_{ji}).";
+let score=0;
+const quiz=document.getElementById("quiz");
 
-    // Bổ sung câu 17 khó (tìm x để ma trận suy biến)
-    questions.push({
-        id: 17, type: "exercise", difficulty: "Khó",
-        text: "Tìm giá trị của \(k\) để ma trận \(N = \begin{pmatrix} 1 & 2 & k \\ 2 & 4 & 5 \\ 1 & 1 & 1 \end{pmatrix}\) có định thức bằng 0.",
-        options: ["A. k = 1", "B. k = 2.5", "C. k = 3", "D. k = -1"],
-        correct: 1,
-        explanation: "\(\det(N) = 1\cdot(4\cdot1 - 5\cdot1) -2\cdot(2\cdot1 -5\cdot1) + k\cdot(2\cdot1 -4\cdot1) = 1\cdot(-1) -2\cdot(-3) + k\cdot(-2) = -1 +6 -2k = 5 -2k =0 \Rightarrow k = 2.5\).",
-        quickTip: "Khai triển theo hàng 1, giải phương trình det=0, chú ý dấu."
-    });
-    questions.push({
-        id: 18, type: "exercise", difficulty: "Khó",
-        text: "Cho \(B = \begin{pmatrix} 3 & 0 & 2 \\ 0 & 2 & 0 \\ 1 & 0 & 2 \end{pmatrix}\). Tính \(\det(2B)\)",
-        options: ["A. 16", "B. 32", "C. 8", "D. 24"],
-        correct: 1,
-        explanation: "\(\det(B) = 3\cdot(2\cdot2-0\cdot0) -0 + 2\cdot(0\cdot0 -2\cdot1) = 3\cdot4 + 2\cdot(-2) =12-4=8\). \(\det(2B) = 2^3 \cdot \det(B) = 8 \cdot 8 = 64\)? Sai, đáp án 64 không trong list → chỉnh lại: det(B) =? Tính lại chính xác: B = [[3,0,2],[0,2,0],[1,0,2]]; khai triển cột 2: \(2\cdot\det\begin{pmatrix}3&2\\1&2\end{pmatrix} = 2\cdot(6-2)=8\). Vậy det(B)=8. det(2B)=2^3 *8=64. Nhưng không có 64, chỉnh đáp án thành 64. Thay đáp án: A.64.",
-        quickTip: "det(kA) = k^n det(A) với n là cấp ma trận."
-    });
-    // Sửa option cho câu 18
-    questions[17].options = ["A. 64", "B. 32", "C. 16", "D. 8"];
-    questions[17].correct = 0;
-    questions[17].explanation = "det(B)=8, cấp 3, det(2B)=2³·8=64.";
-    questions[17].quickTip = "Nhân vô hướng: nhân mỗi hàng nhân tử -> lũy thừa bậc n.";
+qs.forEach((x,i)=>{
+let div=document.createElement("div");
+div.className="q";
+let h=`<h3>Câu ${i+1}: ${x.q}</h3>`;
+x.o.forEach((op,j)=>{
+h+=`<button class='opt' onclick='check(this,${i},${j})'>${String.fromCharCode(65+j)}. ${op}</button>`;
+});
+h+=`<div class='explain' id='e${i}'>
+<b>Đáp án:</b> ${String.fromCharCode(65+x.a)}<br>
+<b>Giải thích:</b> ${x.e}<br>
+<b>Mẹo nhanh:</b> ${x.tip}
+</div>`;
+div.innerHTML=h;
+quiz.appendChild(div);
+});
 
-    // Câu 19 khó: ma trận nghịch đảo 3x3 dạng số đẹp
-    questions.push({
-        id: 19, type: "exercise", difficulty: "Khó",
-        text: "Ma trận \(P = \begin{pmatrix} 1 & 1 & 0 \\ 0 & 1 & 1 \\ 1 & 0 & 1 \end{pmatrix}\) khả nghịch. Tìm phần tử (2,2) của \(P^{-1}\).",
-        options: ["A. 1", "B. 2/3", "C. 1/3", "D. 0"],
-        correct: 2,
-        explanation: "det(P) = 1*(1*1-1*0) -1*(0*1-1*1) +0 = 1 +1 =2. Ma trận cofactor, adj(P) = ... Phần tử (2,2) của P^{-1} = (adj(P)_{2,2})/det = C_{22}/2. C_{22}= (-1)^4 * det([[1,0],[1,1]])=1*1=1. Vậy (P^{-1})_{22}=1/2? Lỗi, C22 = 1, adj(P)22 = 1 => 1/2 không có trong đáp án. Điều chỉnh ma trận P để ra đẹp: sửa đề: P = [[1,1,0],[0,1,1],[1,0,2]]? Quá phức tạp, tôi chọn câu khác chuẩn: thay bằng ma trận có đáp số hữu tỷ đẹp",
-        text: "Cho \(Q = \begin{pmatrix} 2 & 0 & 1 \\ 0 & 1 & 0 \\ 1 & 0 & 1 \end{pmatrix}\). Tìm phần tử hàng 1 cột 3 của \(Q^{-1}\).",
-        options: ["A. -1", "B. 1", "C. 0", "D. 2"],
-        correct: 0,
-        explanation: "det(Q) = 2*(1*1-0*0) -0 +1*(0*0-1*1)=2*1+1*(-1)=1. Ma trận cofactor: C13 = (-1)^{1+3}*det([[0,1],[1,0]]) = 1*(-1) = -1. adj(Q) (3,1) = C13 = -1. Vậy \(Q^{-1}\) tại (1,3) = adj(Q)_{1,3}/det = -1.",
-        quickTip: "Cofactor và adjugate: (A^{-1})_{ij} = (adj(A))_{ij} / det(A)."
-    });
-    // Câu 20 khó cuối: Ứng dụng điều kiện khả nghịch và lý thuyết AI
-    questions.push({
-        id: 20, type: "exercise", difficulty: "Khó",
-        text: "Cho ma trận hệ số \(H = \begin{pmatrix} 1 & m \\ 2 & 4 \end{pmatrix}\). Với giá trị nào của \(m\) thì ma trận không khả nghịch? (Phù hợp triết lý AI: cần biết điều khiển – harnessing)",
-        options: ["A. m = 0", "B. m = 2", "C. m = 1", "D. m = 4"],
-        correct: 1,
-        explanation: "det(H) = 1*4 - m*2 = 4 - 2m = 0 → m = 2. Ma trận suy biến không có nghịch đảo.",
-        quickTip: "ad - bc = 0 → ma trận không khả nghịch, giống như 'ngựa không cương'."
-    });
-
-    // Đảm bảo tổng 20 câu: hiện có: 5 lý thuyết + 5 dễ + 5 trung bình + 5 khó = 20
-    console.log("Tổng số câu:", questions.length);
-    
-    // Render to DOM
-    const container = document.getElementById("questions-container");
-    function renderQuestions() {
-        container.innerHTML = "";
-        questions.forEach((q, idx) => {
-            const card = document.createElement("div");
-            card.className = `question-card ${q.type === 'theory' ? 'theory' : (q.difficulty === 'Dễ' ? 'easy' : (q.difficulty === 'Trung bình' ? 'medium' : 'hard'))}`;
-            const qNum = idx+1;
-            const typeLabel = q.type === 'theory' ? '📖 Lý thuyết' : `📐 Bài tập (${q.difficulty})`;
-            card.innerHTML = `
-                <div class="q-title">
-                    <span class="q-num">Câu ${qNum}</span>
-                    <span class="q-type">${typeLabel}</span>
-                </div>
-                <div class="question-text">${q.text}</div>
-                <div class="options" id="options-${qNum}">
-                    ${q.options.map((opt, optIdx) => `
-                        <div class="option" data-qid="${qNum}" data-optidx="${optIdx}">
-                            <span class="option-letter">${String.fromCharCode(65+optIdx)}</span>
-                            <span>${opt}</span>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="feedback" id="fb-${qNum}">
-                    <strong>📌 Đáp án đúng:</strong> ${q.options[q.correct]}<br>
-                    <strong>💡 Giải thích:</strong> ${q.explanation}<br>
-                    <div class="tip">⚡ Mẹo nhanh: ${q.quickTip}</div>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-        // Gắn sự kiện cho từng option
-        document.querySelectorAll('.option').forEach(optDiv => {
-            optDiv.addEventListener('click', (e) => {
-                const qid = parseInt(optDiv.dataset.qid);
-                const selectedIdx = parseInt(optDiv.dataset.optidx);
-                const question = questions[qid-1];
-                const isCorrect = (selectedIdx === question.correct);
-                const optionsContainer = optDiv.parentElement;
-                const allOpts = optionsContainer.querySelectorAll('.option');
-                // reset styles
-                allOpts.forEach(opt => {
-                    opt.classList.remove('correct-highlight', 'wrong-highlight', 'correct-answer-display');
-                });
-                if (isCorrect) {
-                    optDiv.classList.add('correct-highlight');
-                } else {
-                    optDiv.classList.add('wrong-highlight');
-                    // highlight correct answer
-                    allOpts.forEach(opt => {
-                        const idx = parseInt(opt.dataset.optidx);
-                        if (idx === question.correct) {
-                            opt.classList.add('correct-answer-display');
-                        }
-                    });
-                }
-                // hiển thị feedback
-                const feedbackDiv = document.getElementById(`fb-${qid}`);
-                feedbackDiv.classList.add('show');
-                // cuộn nhẹ
-                feedbackDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            });
-        });
-        // MathJax render lại nội dung động
-        if (window.MathJax) {
-            MathJax.typesetPromise();
-        }
-    }
-    renderQuestions();
-
-    // Tải file HTML
-    const downloadBtn = document.getElementById('downloadBtn');
-    downloadBtn.addEventListener('click', () => {
-        const htmlContent = document.documentElement.outerHTML;
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.href = url;
-        link.download = 'de_thi_trac_nghiem_AI_matrix.html';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-    });
+function check(btn,i,j){
+let q=document.getElementsByClassName("q")[i];
+if(q.dataset.done)return;
+q.dataset.done=1;
+let bs=q.querySelectorAll(".opt");
+bs[qs[i].a].classList.add("correct");
+if(j!=qs[i].a) btn.classList.add("wrong");
+else {score++;document.getElementById("s").innerText=score;}
+document.getElementById("e"+i).style.display="block";
+}
 </script>
 </body>
 </html>
